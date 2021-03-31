@@ -1,12 +1,9 @@
 package hust.cs.javacourse.search.index.impl;
 
-import hust.cs.javacourse.search.index.AbstractDocument;
-import hust.cs.javacourse.search.index.AbstractIndex;
-import hust.cs.javacourse.search.index.AbstractPostingList;
-import hust.cs.javacourse.search.index.AbstractTerm;
-import java.io.File;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import hust.cs.javacourse.search.index.*;
+
+import java.io.*;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -20,7 +17,25 @@ public class Index extends AbstractIndex {
      */
     @Override
     public String toString() {
-        return null;
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("docId->docPath\n");
+        for(Map.Entry<Integer,String> entry:docIdToDocPathMapping.entrySet())
+        {
+            buffer.append(entry.getKey());
+            buffer.append("->");
+            buffer.append(entry.getValue());
+            buffer.append("\n");
+        }
+
+        buffer.append("Term->PostingList\n");
+        for(Map.Entry<AbstractTerm,AbstractPostingList> entry: termToPostingListMapping.entrySet())
+        {
+            buffer.append(entry.getKey().toString());
+            buffer.append("->");
+            buffer.append(entry.getValue().toString());
+            buffer.append("\n");
+        }
+        return buffer.toString();
     }
 
     /**
@@ -30,7 +45,15 @@ public class Index extends AbstractIndex {
      */
     @Override
     public void addDocument(AbstractDocument document) {
+        docIdToDocPathMapping.put(document.getDocId(),document.getDocPath());
 
+        for(AbstractTermTuple tuple :document.getTuples())
+        {
+            if(!termToPostingListMapping.containsKey(tuple.term))
+            {
+
+            }
+        }
     }
 
     /**
@@ -63,7 +86,7 @@ public class Index extends AbstractIndex {
      */
     @Override
     public AbstractPostingList search(AbstractTerm term) {
-        return null;
+        return termToPostingListMapping.get(term);
     }
 
     /**
@@ -73,7 +96,7 @@ public class Index extends AbstractIndex {
      */
     @Override
     public Set<AbstractTerm> getDictionary() {
-        return null;
+        return termToPostingListMapping.keySet();
     }
 
     /**
@@ -97,7 +120,7 @@ public class Index extends AbstractIndex {
      */
     @Override
     public String getDocName(int docId) {
-        return null;
+        return docIdToDocPathMapping.get(docId);
     }
 
     /**
