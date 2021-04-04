@@ -19,7 +19,7 @@ public class PostingList extends AbstractPostingList {
      */
     @Override
     public void add(AbstractPosting posting) {
-        if (!list.contains(posting)) {
+        if (!this.contains(posting)) {
             list.add(posting);
         }
     }
@@ -46,7 +46,12 @@ public class PostingList extends AbstractPostingList {
      */
     @Override
     public void add(List<AbstractPosting> postings) {
-
+        for(AbstractPosting cur:postings)
+        {
+            if(this.contains(cur))
+                continue;
+            this.add(cur);
+        }
     }
 
     /**
@@ -68,7 +73,7 @@ public class PostingList extends AbstractPostingList {
      */
     @Override
     public int indexOf(AbstractPosting posting) {
-        if (!list.contains(posting)) {
+        if (!this.contains(posting)) {
             return -1;
         } else {
             return list.indexOf(posting);

@@ -35,7 +35,7 @@ public class Posting extends AbstractPosting {
      */
     @Override
     public String toString() {
-        return "docId:" + this.getDocId() + " freq:" + this.getFreq() + " position:" + positions.toString();
+        return "docId:" + this.getDocId() + " freq:" + this.getFreq() + " position:" + positions.toString()+"\n";
     }
 
     /**
