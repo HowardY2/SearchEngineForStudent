@@ -3,8 +3,12 @@ package hust.cs.javacourse.search.index.impl;
 import hust.cs.javacourse.search.index.AbstractPosting;
 import hust.cs.javacourse.search.index.AbstractPostingList;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 public class PostingList extends AbstractPostingList {
@@ -15,7 +19,9 @@ public class PostingList extends AbstractPostingList {
      */
     @Override
     public void add(AbstractPosting posting) {
-
+        if (!list.contains(posting)) {
+            list.add(posting);
+        }
     }
 
     /**
@@ -25,7 +31,12 @@ public class PostingList extends AbstractPostingList {
      */
     @Override
     public String toString() {
-        return null;
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("PostingList:\n");
+        for (AbstractPosting cur : list) {
+            stringBuilder.append(cur.toString()).append("\n");
+        }
+        return stringBuilder.toString();
     }
 
     /**
@@ -46,7 +57,7 @@ public class PostingList extends AbstractPostingList {
      */
     @Override
     public AbstractPosting get(int index) {
-        return null;
+        return list.get(index);
     }
 
     /**
@@ -57,7 +68,11 @@ public class PostingList extends AbstractPostingList {
      */
     @Override
     public int indexOf(AbstractPosting posting) {
-        return 0;
+        if (!list.contains(posting)) {
+            return -1;
+        } else {
+            return list.indexOf(posting);
+        }
     }
 
     /**
@@ -68,7 +83,12 @@ public class PostingList extends AbstractPostingList {
      */
     @Override
     public int indexOf(int docId) {
-        return 0;
+        for(AbstractPosting cur:list)
+        {
+            if(cur.getDocId()==docId)
+                return this.indexOf(cur);
+        }
+        return -1;
     }
 
     /**
@@ -79,6 +99,10 @@ public class PostingList extends AbstractPostingList {
      */
     @Override
     public boolean contains(AbstractPosting posting) {
+        for (AbstractPosting cur : list) {
+            if (cur.equals(posting))
+                return true;
+        }
         return false;
     }
 
@@ -89,7 +113,7 @@ public class PostingList extends AbstractPostingList {
      */
     @Override
     public void remove(int index) {
-
+        list.remove(index);
     }
 
     /**
@@ -99,7 +123,7 @@ public class PostingList extends AbstractPostingList {
      */
     @Override
     public void remove(AbstractPosting posting) {
-
+        list.remove(posting);
     }
 
     /**
@@ -109,7 +133,7 @@ public class PostingList extends AbstractPostingList {
      */
     @Override
     public int size() {
-        return 0;
+        return list.size();
     }
 
     /**
@@ -117,7 +141,7 @@ public class PostingList extends AbstractPostingList {
      */
     @Override
     public void clear() {
-
+        list.clear();
     }
 
     /**
@@ -127,7 +151,7 @@ public class PostingList extends AbstractPostingList {
      */
     @Override
     public boolean isEmpty() {
-        return false;
+        return list.isEmpty();
     }
 
     /**
@@ -135,7 +159,12 @@ public class PostingList extends AbstractPostingList {
      */
     @Override
     public void sort() {
-
+        list.sort(new Comparator<AbstractPosting>() {
+            @Override
+            public int compare(AbstractPosting o1, AbstractPosting o2) {
+                return o1.compareTo(o2);
+            }
+        });
     }
 
     /**
@@ -145,7 +174,11 @@ public class PostingList extends AbstractPostingList {
      */
     @Override
     public void writeObject(ObjectOutputStream out) {
-
+        try {
+            out.writeObject(this.list);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -155,6 +188,10 @@ public class PostingList extends AbstractPostingList {
      */
     @Override
     public void readObject(ObjectInputStream in) {
-
+        try {
+            this.list=(List<AbstractPosting>)in.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }
